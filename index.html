@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trò chơi kiểm tra nhập chữ cái</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        #game-container {
+            display: flex;
+            flex-direction: column;
+            flex-wrap: nowrap;
+            justify-content: space-around;
+            align-items: center;
+            height: 400px;
+        }
+
+        h1 {
+            font-size: 200px;
+            color: rgb(16, 193, 237);
+            margin: 0px;
+        }
+
+        #user-input {
+
+            text-align: center;
+            text-transform: uppercase;
+            border-radius: 20px;
+            border-style: dashed;
+            /* Đặt kiểu border thành dashed (đứt đoạn) */
+            border-color: rgba(0, 0, 0, 0.3);
+            /* Màu border mờ */
+            padding: 5px;
+        }
+
+        input:focus {
+            border-width: 0;
+            outline: none;
+            /* Ẩn outline mặc định của trình duyệt */
+        }
+
+        input:focus::placeholder {
+            color: transparent;
+            /* Đặt màu chữ của placeholder thành trong suốt */
+        }
+
+        #result-message {
+            color: brown;
+            font-style: italic;
+            transition: all 1s ease-in;
+            margin-top: 80px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="game-container">
+        <h1 id="letter-display">M</h1>
+        <input type="text" id="user-input" placeholder="start">
+
+    </div>
+    <div>Điểm số : <span id="pointShow">0</span></div>
+    <p id="result-message"></p>
+    <script>
+        const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"; // Các chữ cái cần nhập
+        let currentIndex = 0;
+        let lastIndex = 0;
+        let pointD = 0;
+
+        // Lấy các phần tử từ DOM
+        const letterDisplay = document.getElementById("letter-display");
+        const userInput = document.getElementById("user-input");
+        const resultMessage = document.getElementById("result-message");
+        const pointShow = document.getElementById("pointShow");
+
+        // Hiển thị chữ cái đầu tiên
+        letterDisplay.textContent = letters[currentIndex];
+
+        // Lắng nghe sự kiện nhập liệu từ bàn phím
+        userInput.addEventListener("input", checkInput);
+
+        function checkInput() {
+
+            let inputValue = userInput.value;
+            if (inputValue.length > 1) {
+                // Nếu có, giữ lại chỉ ký tự cuối cùng
+                inputValue = inputValue[inputValue.length - 1];
+                userInput.value = inputValue;
+            }
+
+            const enteredLetter = inputValue.toUpperCase();
+            const currentLetter = letters[currentIndex];
+
+            if (enteredLetter === currentLetter) {
+                // Nếu nhập đúng, chuyển sang chữ cái tiếp theo
+
+                currentIndex = Math.floor(Math.random() * 24);
+                console.log(currentIndex, "-", lastIndex);
+                if (currentIndex == lastIndex) {
+                    currentIndex = Math.floor(Math.random() * 24);
+                }
+                lastIndex = currentIndex;
+
+                pointD++;
+                pointShow.textContent = pointD;
+                if (currentIndex < letters.length) {
+                    letterDisplay.textContent = letters[currentIndex];
+                    userInput.value = "";
+                    resultMessage.textContent = "";
+                } else {
+                    // Nếu đã nhập xong tất cả các chữ cái
+                    letterDisplay.textContent = "Hoàn thành!";
+                    userInput.disabled = true;
+                }
+            } else {
+                // Nếu nhập sai
+                resultMessage.textContent = "Nhập Sai";
+                pointD = 0;
+                pointShow.textContent = "0";
+            }
+        }
+    </script>
+</body>
+
+</html>
